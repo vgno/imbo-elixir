@@ -3,4 +3,4 @@
               {description,"Helps you connect and work with Imbo\n"},
               {modules,['Elixir.ImboConnector']},
               {registered,[]},
-              {vsn,"0.1.0"}]}.
+              {vsn,"0.2.0"}]}.

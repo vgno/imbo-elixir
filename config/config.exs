@@ -31,5 +31,6 @@ use Mix.Config
 
 config :imbo_connector,
   public_key: "",
+  user: "",
   private_key: "private_key",
   imbo_url: ""
