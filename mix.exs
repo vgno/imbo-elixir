@@ -25,7 +25,8 @@ defmodule ImboConnector.MixProject do
     [
       {:httpoison, "~> 1.4"},
       {:timex, "~> 3.1"},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:jason, "~> 1.1"}
     ]
   end
 

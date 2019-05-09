@@ -29,7 +29,7 @@ defmodule ImboConnector do
   defp handle_response(response) do
     case response do
       {:ok, %HTTPoison.Response{body: body}} ->
-        {:ok, body}
+        {:ok, Jason.decode!(body)}
 
       {:error, error} ->
         {:error, error}
