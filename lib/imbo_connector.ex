@@ -41,13 +41,11 @@ defmodule ImboConnector do
   end
 
   defp generate_timestamp() do
-    now =
       Timex.now()
       |> Timex.format!("{ISO:Extended}")
       |> String.replace("+00:00", "")
       |> String.slice(0..18)
-
-    "#{now}Z"
+    |> Kernel.<>("Z")
   end
 
   defp sign(data) do
