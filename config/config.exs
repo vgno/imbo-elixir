@@ -30,7 +30,7 @@ use Mix.Config
 #     import_config "#{Mix.env()}.exs"
 
 config :imbo_connector,
-  public_key: "",
-  user: "",
+  public_key: "public_key",
+  user: "user",
   private_key: "private_key",
-  imbo_url: ""
+  imbo_url: "imbo_url"
