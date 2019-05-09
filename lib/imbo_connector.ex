@@ -26,6 +26,10 @@ defmodule ImboConnector do
     handle_response(HTTPoison.get(sign_url_for_read(base_url), headers))
   end
 
+  def construct_image_url(id) do
+    sign_url_for_read(generate_url("images") <> "/#{id}")
+  end
+
   defp handle_response(response) do
     case response do
       {:ok, %HTTPoison.Response{body: body}} ->
