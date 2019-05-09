@@ -12,10 +12,7 @@ defmodule ImboConnector do
       "X-Imbo-Authenticate-Timestamp": timestamp
     ]
 
-    case HTTPoison.post(base_url, {:file, file_path}, headers) do
-      {:ok, %HTTPoison.Response{body: body}} ->
-        body
-    end
+    handle_response(HTTPoison.post(base_url, {:file, file_path}, headers))
   end
 
   def get_uploads do
@@ -26,7 +23,17 @@ defmodule ImboConnector do
       Accept: "application/json"
     ]
 
-    HTTPoison.get!(sign_url_for_read(base_url), headers)
+    handle_response(HTTPoison.get(sign_url_for_read(base_url), headers))
+  end
+
+  defp handle_response(response) do
+    case response do
+      {:ok, %HTTPoison.Response{body: body}} ->
+        {:ok, body}
+
+      {:error, error} ->
+        {:error, error}
+    end
   end
 
   defp generate_timestamp() do
