@@ -26,3 +26,9 @@ config :imbo_connector,
   private_key: "PRIVATE_KEY",
   imbo_url: "LINK_TO_IMBO_INSTALL_ROOT"
 ```
+
+## Functions
+
+`get_uploads/0` returns all uploads for the set user
+`upload/1` uploads image
+`construct_image_url/1` returns image url based on body['imageIdentifier']
