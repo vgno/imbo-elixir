@@ -13,8 +13,8 @@ defmodule ImboConnector do
     ]
 
     base_url
-    |> HTTPoison.post({:file, file_path}, headers)
-    |> handle_response()
+      |> HTTPoison.post({:file, file_path}, headers)
+      |> handle_response()
   end
 
   def get_uploads do
@@ -26,9 +26,9 @@ defmodule ImboConnector do
     ]
 
     base_url
-    |> sign_url_for_read(),
-    |> HTTPoison.get(headers)
-    |> handle_response
+      |> sign_url_for_read()
+      |> HTTPoison.get(headers)
+      |> handle_response
   end
 
   def construct_image_url(id) do
@@ -46,7 +46,7 @@ defmodule ImboConnector do
   end
 
   defp generate_timestamp() do
-      Timex.now()
+    Timex.now()
       |> Timex.format!("{ISO:Extended}")
       |> String.replace("+00:00", "")
       |> String.slice(0..18)
