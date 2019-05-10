@@ -12,7 +12,9 @@ defmodule ImboConnector do
       "X-Imbo-Authenticate-Timestamp": timestamp
     ]
 
-    handle_response(HTTPoison.post(base_url, {:file, file_path}, headers))
+    base_url
+    |> HTTPoison.post({:file, file_path}, headers)
+    |> handle_response()
   end
 
   def get_uploads do
@@ -23,7 +25,10 @@ defmodule ImboConnector do
       Accept: "application/json"
     ]
 
-    handle_response(HTTPoison.get(sign_url_for_read(base_url), headers))
+    base_url
+    |> sign_url_for_read(),
+    |> HTTPoison.get(headers)
+    |> handle_response
   end
 
   def construct_image_url(id) do
@@ -45,7 +50,7 @@ defmodule ImboConnector do
       |> Timex.format!("{ISO:Extended}")
       |> String.replace("+00:00", "")
       |> String.slice(0..18)
-    |> Kernel.<>("Z")
+      |> Kernel.<>("Z")
   end
 
   defp sign(data) do
