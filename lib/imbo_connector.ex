@@ -57,7 +57,7 @@ defmodule ImboConnector do
     private_key = Application.get_env(:imbo_connector, :private_key)
 
     :crypto.hmac(:sha256, private_key, data)
-    |> Base.encode16(case: :lower)
+      |> Base.encode16(case: :lower)
   end
 
   defp sign_url_for_read(url) do
@@ -72,7 +72,10 @@ defmodule ImboConnector do
 
   defp sign_write(method, timestamp, url) do
     public_key = Application.get_env(:imbo_connector, :public_key)
-    sign(Enum.join([method, url, public_key, timestamp], "|"))
+
+    [method, url, public_key, timestamp]
+      |> Enum.join("|")
+      |> sign()
   end
 
   defp generate_url(resource) do
