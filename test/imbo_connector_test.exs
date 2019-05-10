@@ -23,8 +23,15 @@ defmodule ImboConnectorTest do
     end
   end
 
-  test "upload/1 returns error with wrong credentials" do
+  test "upload/1 returns error with invalid file" do
     case ImboConnector.upload("123123") do
+      {:error, error} ->
+        assert error
+    end
+  end
+
+  test "upload/1 returns error with invalid credentials and correct file" do
+    case ImboConnector.upload("https://upload.wikimedia.org/wikipedia/commons/d/d9/Test.png") do
       {:error, error} ->
         assert error
     end
