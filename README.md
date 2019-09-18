@@ -40,3 +40,43 @@ ImboElixir.construct_image_url("imageIdentifier")
 # => "https://IMBO_INSTALLATION_URL/users/USER/images/IMAGE_IDENTIFIER?accessToken=ACCESS_TOKEN"
 
 ```
+
+## Examples
+
+Uploading an image from a HTML form inn Phoenix:
+
+```elixir
+defmodule MyApp.Util do
+
+  def upload_imbo_image(file) do
+    path = file.path
+
+    with {:ok, body} <- ImboConnector.upload(path) do
+      id = body["imageIdentifier"]
+
+      ImboConnector.construct_image_url("id")
+    end
+  end
+end
+
+```
+
+Configuring a custom type for using with Ecto.cast in for example a Phoenix project.
+
+```elixir
+defmodule MyApp.Types.ImboImage do
+  @behaviour Ecto.Type
+
+  def type, do: String
+
+  def cast(%Plug.Upload{} = file) do
+    with image_url <- MyApp.Util.upload_imbo_image(file) do
+      {:ok, image_url}
+    end
+  end
+
+  def dump(x), do: {:ok, x}
+
+  def load(x), do: Ecto.Type.load(:string, x)
+end
+```
