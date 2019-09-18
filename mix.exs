@@ -4,7 +4,7 @@ defmodule ImboConnector.MixProject do
   def project do
     [
       app: :imbo_connector,
-      version: "0.2.0",
+      version: "2.0.1",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -35,7 +35,7 @@ defmodule ImboConnector.MixProject do
       files: ["lib", "mix.exs"],
       maintainers: ["Petter Kaspersen"],
       licenses: ["MIT"],
-      links: %{}
+      links: %{"github" => "https://github.com/vgno/imbo-elixir/"}
     ]
   end
 

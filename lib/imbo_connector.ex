@@ -13,8 +13,24 @@ defmodule ImboConnector do
     ]
 
     base_url
-      |> HTTPoison.post({:file, file_path}, headers)
-      |> handle_response()
+    |> HTTPoison.post({:file, file_path}, headers)
+    |> handle_response()
+  end
+
+  def delete(image_id) do
+    base_url = generate_url("images") <> "/#{image_id}"
+    timestamp = generate_timestamp()
+    signature = sign_write("DELETE", timestamp, base_url)
+
+    headers = [
+      "X-Imbo-PublicKey": Application.get_env(:imbo_connector, :public_key),
+      "X-Imbo-Authenticate-Signature": signature,
+      "X-Imbo-Authenticate-Timestamp": timestamp
+    ]
+
+    base_url
+    |> HTTPoison.delete(headers)
+    |> handle_response()
   end
 
   def get_uploads do
@@ -26,9 +42,9 @@ defmodule ImboConnector do
     ]
 
     base_url
-      |> sign_url_for_read()
-      |> HTTPoison.get(headers)
-      |> handle_response
+    |> sign_url_for_read()
+    |> HTTPoison.get(headers)
+    |> handle_response
   end
 
   def construct_image_url(id) do
@@ -47,17 +63,17 @@ defmodule ImboConnector do
 
   defp generate_timestamp() do
     Timex.now()
-      |> Timex.format!("{ISO:Extended}")
-      |> String.replace("+00:00", "")
-      |> String.slice(0..18)
-      |> Kernel.<>("Z")
+    |> Timex.format!("{ISO:Extended}")
+    |> String.replace("+00:00", "")
+    |> String.slice(0..18)
+    |> Kernel.<>("Z")
   end
 
   defp sign(data) do
     private_key = Application.get_env(:imbo_connector, :private_key)
 
     :crypto.hmac(:sha256, private_key, data)
-      |> Base.encode16(case: :lower)
+    |> Base.encode16(case: :lower)
   end
 
   defp sign_url_for_read(url) do
@@ -74,8 +90,8 @@ defmodule ImboConnector do
     public_key = Application.get_env(:imbo_connector, :public_key)
 
     [method, url, public_key, timestamp]
-      |> Enum.join("|")
-      |> sign()
+    |> Enum.join("|")
+    |> sign()
   end
 
   defp generate_url(resource) do
