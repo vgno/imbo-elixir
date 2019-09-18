@@ -1,23 +1,20 @@
 # ImboConnector
 
-**TODO: Add description**
+Allows interfacing with an Imbo installation using Elixir.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `imbo_connector` to your list of dependencies in `mix.exs`:
+Add `imbo_connector` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:imbo_connector, "~> 0.1.0"}
+    {:imbo_connector, "~> 2.1.0"}
   ]
 end
 ```
 
-## Usage
-
-Add config under `config/config.exs`.
+Next, add the following config to your `config/config.exs`:
 
 ```
 config :imbo_connector,
@@ -27,10 +24,19 @@ config :imbo_connector,
   imbo_url: "LINK_TO_IMBO_INSTALL_ROOT"
 ```
 
-## Functions
+## Usage
 
-`get_uploads/0` returns all uploads for the set user
+```elixir
+ImboElixir.get_uploads
+# => {:ok, %{images => [%{}]}
 
-`upload/1` uploads image
+ImboElixir.upload("/path/to/image.jpg")
+# => {:ok, %{}}
 
-`construct_image_url/1` returns image url based on body['imageIdentifier']
+ImboElixir.delete("image_id")
+# => {:ok, %{"imageIdentifier" => "image_id"}}
+
+ImboElixir.construct_image_url("imageIdentifier")
+# => "https://IMBO_INSTALLATION_URL/users/USER/images/IMAGE_IDENTIFIER?accessToken=ACCESS_TOKEN"
+
+```
