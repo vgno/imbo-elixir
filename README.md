@@ -1,4 +1,4 @@
-# ImboConnector
+# Imbo Connector
 
 Allows interfacing with an Imbo installation using Elixir.
 
@@ -27,16 +27,16 @@ config :imbo_connector,
 ## Usage
 
 ```elixir
-ImboElixir.get_uploads
+ImboConnector.get_uploads
 # => {:ok, %{images => [%{}]}
 
-ImboElixir.upload("/path/to/image.jpg")
+ImboConnector.upload("/path/to/image.jpg")
 # => {:ok, %{}}
 
-ImboElixir.delete("image_id")
+ImboConnector.delete("image_id")
 # => {:ok, %{"imageIdentifier" => "image_id"}}
 
-ImboElixir.construct_image_url("imageIdentifier")
+ImboConnector.construct_image_url("imageIdentifier")
 # => "https://IMBO_INSTALLATION_URL/users/USER/images/IMAGE_IDENTIFIER?accessToken=ACCESS_TOKEN"
 
 ```
