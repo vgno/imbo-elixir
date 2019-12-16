@@ -1,6 +1,8 @@
 defmodule ImboConnector do
   use Timex
 
+  alias ImboConnector.Util
+
   def upload(file_path) do
     base_url = generate_url("images")
     timestamp = generate_timestamp()
@@ -51,6 +53,16 @@ defmodule ImboConnector do
     sign_url_for_read(generate_url("images") <> "/#{id}")
   end
 
+  def apply_transformation(url, %{compress: compress}) when is_number(compress) do
+    clean_url = Util.strip_access_token(url)
+
+    if String.contains?(clean_url, "?") do
+      sign_url_for_read(clean_url <> "&t[]=compress:level=#{compress}")
+    else
+      sign_url_for_read(clean_url <> "?t[]=compress:level=#{compress}")
+    end
+  end
+
   defp handle_response(response) do
     case response do
       {:ok, %HTTPoison.Response{body: body}} ->
@@ -76,7 +88,7 @@ defmodule ImboConnector do
     |> Base.encode16(case: :lower)
   end
 
-  defp sign_url_for_read(url) do
+  def sign_url_for_read(url) do
     signature = sign(url)
 
     if url =~ "?" do
