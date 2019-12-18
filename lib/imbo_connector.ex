@@ -62,9 +62,13 @@ defmodule ImboConnector do
     final_url= Enum.reduce(options, url_with_query, fn option, acc ->
       case option do
         {:compress, compress_value} ->
-          acc <> "t[]=compress:level=#{compress_value}"
+          acc <> "t[]=compress:level=#{compress_value}&"
         {:resize, [width, height]} ->
-          acc <> "t[]=resize:width=#{width},height=#{height}"
+          acc <> "t[]=resize:width=#{width},height=#{height}&"
+        {:resize, %{width: width}} ->
+          acc <> "t[]=resize:width=#{width}&"
+        {:resize, %{height: height}} ->
+          acc <> "t[]=resize:height=#{height}&"
 
         _ ->
           acc
@@ -80,7 +84,7 @@ defmodule ImboConnector do
       |> Util.strip_access_token
       |> Util.add_query_param_symbol
 
-    sign_url_for_read(url_with_query <> "t[]=thumbnail:width=#{width},height=#{height},fit=inset")
+    sign_url_for_read(url_with_query <> "t[]=thumbnail:width=#{width},height=#{height},fit=inset&t[]=compress:level=50")
   end
 
   defp handle_response(response) do
@@ -111,8 +115,8 @@ defmodule ImboConnector do
   def sign_url_for_read(url) do
     signature = sign(url)
 
-    if url =~ "?" do
-      url <> "&accessToken=#{signature}"
+    if String.ends_with?(url, "&") do
+      url <> "accessToken=#{signature}"
     else
       url <> "?accessToken=#{signature}"
     end
@@ -135,4 +139,7 @@ defmodule ImboConnector do
 end
 
 
+#IMbo
+
 #ImboConnector.apply_transformation("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"compress": 30, "resize": [1080, 1920]})
+# ImboConnector.create_thumbnail("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"width": 288, "height": 512}),
