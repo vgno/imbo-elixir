@@ -74,6 +74,15 @@ defmodule ImboConnector do
     sign_url_for_read(final_url)
   end
 
+  def create_thumbnail(url, %{width: width, height: height}) do
+    url_with_query =
+      url
+      |> Util.strip_access_token
+      |> Util.add_query_param_symbol
+
+    sign_url_for_read(url_with_query <> "t[]=thumbnail:width=#{width},height=#{height},fit=inset")
+  end
+
   defp handle_response(response) do
     case response do
       {:ok, %HTTPoison.Response{body: body}} ->
@@ -126,4 +135,4 @@ defmodule ImboConnector do
 end
 
 
-ImboConnector.apply_transformation("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"compress": 30})
+#ImboConnector.apply_transformation("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"compress": 30, "resize": [1080, 1920]})
