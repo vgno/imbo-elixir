@@ -142,9 +142,3 @@ defmodule ImboConnector do
     base_url <> "/users/" <> user <> "/#{resource}"
   end
 end
-
-
-#IMbo
-
-#ImboConnector.apply_transformation("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"resize": %{width: 720}})
-# ImboConnector.create_thumbnail("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"width": 288, "height": 512}),
