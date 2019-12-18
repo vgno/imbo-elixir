@@ -84,7 +84,7 @@ defmodule ImboConnector do
       |> Util.strip_access_token
       |> Util.add_query_param_symbol
 
-    sign_url_for_read(url_with_query <> "t[]=thumbnail:width=#{width},height=#{height},fit=inset&t[]=compress:level=50")
+    sign_url_for_read(url_with_query <> "t[]=thumbnail:width=#{width},height=#{height},fit=inset&t[]=compress:level=50&")
   end
 
   defp handle_response(response) do
@@ -113,12 +113,17 @@ defmodule ImboConnector do
   end
 
   def sign_url_for_read(url) do
-    signature = sign(url)
 
-    if String.ends_with?(url, "&") do
-      url <> "accessToken=#{signature}"
+    if not String.contains?(url, "?") do
+      url <> "&accessToken=#{sign(url)}"
     else
-      url <> "?accessToken=#{signature}"
+      if String.ends_with?(url, "&") do
+        new_url = url |> String.slice(0..-2)
+
+        new_url <> "&accessToken=#{sign(new_url)}"
+      else
+        url <> "&accessToken=#{sign(url)}"
+      end
     end
   end
 
@@ -141,5 +146,5 @@ end
 
 #IMbo
 
-#ImboConnector.apply_transformation("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"compress": 30, "resize": [1080, 1920]})
+#ImboConnector.apply_transformation("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"resize": %{width: 720}})
 # ImboConnector.create_thumbnail("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"width": 288, "height": 512}),
