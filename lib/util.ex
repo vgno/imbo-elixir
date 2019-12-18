@@ -26,4 +26,12 @@ defmodule ImboConnector.Util do
         |> String.split("?")
         |> Enum.fetch!(0)
     end
+
+    def add_query_param_symbol(url) do
+        if String.contains?(url, "?") do
+            url <> "&"
+        else
+            url <> "?"
+        end
+    end
 end

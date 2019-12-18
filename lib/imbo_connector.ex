@@ -53,14 +53,25 @@ defmodule ImboConnector do
     sign_url_for_read(generate_url("images") <> "/#{id}")
   end
 
-  def apply_transformation(url, %{compress: compress}) when is_number(compress) do
-    clean_url = Util.strip_access_token(url)
+  def apply_transformation(url, %{} = options) do
+    url_with_query =
+      url
+      |> Util.strip_access_token
+      |> Util.add_query_param_symbol
 
-    if String.contains?(clean_url, "?") do
-      sign_url_for_read(clean_url <> "&t[]=compress:level=#{compress}")
-    else
-      sign_url_for_read(clean_url <> "?t[]=compress:level=#{compress}")
-    end
+    final_url= Enum.reduce(options, url_with_query, fn option, acc ->
+      case option do
+        {:compress, compress_value} ->
+          acc <> "t[]=compress:level=#{compress_value}"
+        {:resize, [width, height]} ->
+          acc <> "t[]=resize:width=#{width},height=#{height}"
+
+        _ ->
+          acc
+      end
+    end)
+
+    sign_url_for_read(final_url)
   end
 
   defp handle_response(response) do
@@ -113,3 +124,6 @@ defmodule ImboConnector do
     base_url <> "/users/" <> user <> "/#{resource}"
   end
 end
+
+
+ImboConnector.apply_transformation("https://imbo.vgc.no/users/vglab/images/6c98e6c458171f16da8b48a6805ede65?accessToken=68796a9267df88664897852ddc8039c35d86a68302b101f6b02b3f878ebeda86", %{"compress": 30})
